@@ -73,6 +73,12 @@ async function main() {
 			describe: 'Input folder containing square images',
 			demandOption: true,
 			type: 'string',
+			coerce: (value) => {
+				if (Array.isArray(value)) {
+					value = value.join('');
+				}
+				return value;
+			},
 		})
 		.option('maxColumns', {
 			alias: 'c',

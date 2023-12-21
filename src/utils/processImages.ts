@@ -4,26 +4,19 @@ import * as Jimp from 'jimp';
 
 // Function to read images from the specified folder
 async function readImages(folder: string): Promise<Jimp[]> {
-	try {
-		const files = fs.readdirSync(folder);
-		const images: Jimp[] = [];
-
-		for (const file of files) {
-			const imagePath = path.join(folder, file);
-
-			try {
-				const image = await Jimp.read(imagePath);
-				images.push(image);
-			} catch (error) {
-				console.error(`Skipping file ${file}`, { error });
-			}
+	const images: Jimp[] = [];
+	const files = await fs.promises.readdir(folder);
+	const imagePromises = files.map(async (file) => {
+		const imagePath = path.join(folder, file);
+		try {
+			images.push(await Jimp.read(imagePath));
+		} catch (error) {
+			console.error(`Skipping file ${file}`, { error });
 		}
+	});
 
-		return images;
-	} catch (error) {
-		console.error('Error reading images from folder', { error });
-		return [];
-	}
+	await Promise.all(imagePromises);
+	return images;
 }
 
 // Function to stitch images together

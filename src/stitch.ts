@@ -65,8 +65,12 @@ function stitchImages(images: Jimp[], maxColumns: number): Jimp {
 	const resultImage = new Jimp(resultWidth, resultHeight, 0x00000000);
 
 	images.forEach((image, index) => {
-		const x = (index % columns) * maxWidth;
-		const y = Math.floor(index / columns) * maxHeight;
+		const x =
+			(index % columns) * maxWidth +
+			Math.floor((maxWidth - image.getWidth()) / 2);
+		const y =
+			Math.floor(index / columns) * maxHeight +
+			Math.floor((maxHeight - image.getHeight()) / 2);
 
 		// Compose the images onto the result image with alpha transparency
 		resultImage.composite(image, x, y);

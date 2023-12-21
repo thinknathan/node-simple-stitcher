@@ -14,7 +14,8 @@
 		"stitch": "./stitch.cjs"
 	},
 	"files": [
-		"stitch.cjs"
+		"stitch.cjs",
+		"utils"
 	],
 	"scripts": {
 		"build": "tsc && npm run renameCjs && npm run prettier",

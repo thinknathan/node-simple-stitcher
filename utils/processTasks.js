@@ -8,22 +8,30 @@ const is = require("image-size");
 const workerPool_1 = require("./workerPool");
 const imagePaths = [];
 // Function to read images from the specified folder
-function readImages(folder) {
+async function readImages(folder) {
     try {
-        const files = fs.readdirSync(folder);
-        const images = [];
+        const files = await fs.promises.readdir(folder);
+        const imagePromises = [];
         for (const file of files) {
             const imagePath = path.join(folder, file);
-            try {
-                const image = is.imageSize(imagePath);
-                images.push(image);
-                imagePaths.push(imagePath);
-            }
-            catch (error) {
-                console.error(`Skipping file ${file}`, { error });
-            }
+            // Wrap is.imageSize inside a Promise and resolve or reject accordingly
+            const imageSizePromise = new Promise((resolve, reject) => {
+                is.imageSize(imagePath, (err, size) => {
+                    if (err) {
+                        console.error(`Error calculating image size for ${imagePath}`, {
+                            error: err,
+                        });
+                        reject(err);
+                    }
+                    else {
+                        imagePaths.push(imagePath);
+                        resolve(size);
+                    }
+                });
+            });
+            imagePromises.push(imageSizePromise);
         }
-        return images;
+        return await Promise.all(imagePromises);
     }
     catch (error) {
         console.error('Error reading images from folder', { error });
@@ -32,7 +40,7 @@ function readImages(folder) {
 }
 // Function to stitch images together
 async function stitchImages(inputFolder, maxColumns, threadCount) {
-    const imageSizeResults = readImages(inputFolder);
+    const imageSizeResults = await readImages(inputFolder);
     if (imageSizeResults.length === 0) {
         throw new Error('No valid images found.');
     }

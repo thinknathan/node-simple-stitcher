@@ -41,17 +41,22 @@ async function readImages(folder) {
 }
 // Function to stitch images together
 function stitchImages(images, maxColumns) {
+	// Find the maximum width and height among all images
+	const maxWidth = Math.max(...images.map((img) => img.getWidth()));
+	const maxHeight = Math.max(...images.map((img) => img.getHeight()));
 	const columns = Math.min(maxColumns, images.length);
 	const rows = Math.ceil(images.length / maxColumns);
-	const maxWidth = images[0].getWidth();
-	const maxHeight = images[0].getHeight();
 	const resultWidth = columns * maxWidth;
 	const resultHeight = rows * maxHeight;
 	// Create a new image with a transparent background
 	const resultImage = new Jimp(resultWidth, resultHeight, 0x00000000);
 	images.forEach((image, index) => {
-		const x = (index % columns) * maxWidth;
-		const y = Math.floor(index / columns) * maxHeight;
+		const x =
+			(index % columns) * maxWidth +
+			Math.floor((maxWidth - image.getWidth()) / 2);
+		const y =
+			Math.floor(index / columns) * maxHeight +
+			Math.floor((maxHeight - image.getHeight()) / 2);
 		// Compose the images onto the result image with alpha transparency
 		resultImage.composite(image, x, y);
 	});
@@ -63,6 +68,10 @@ async function main() {
 	const maxColumns = argv.maxColumns;
 	// Read images from the input folder
 	const images = await readImages(inputFolder);
+	if (images.length === 0) {
+		console.log('No valid images found. Exiting.');
+		return;
+	}
 	// Stitch images together
 	const stitchedImage = stitchImages(images, maxColumns);
 	// Create the output folder if it doesn't exist

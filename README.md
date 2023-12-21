@@ -1,6 +1,6 @@
 # node-simple-stitcher
 
-Command-line utility that stitches together images in a folder to form a single spritesheet. It's simple because it only handles cases where all the input images are square.
+Command-line utility that stitches together images in a folder to form a single spritesheet. It uses a naive algorithm that is not the most efficient when handling images that have different dimensions.
 
 ## Install
 

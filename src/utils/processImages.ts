@@ -21,7 +21,11 @@ async function readImages(imagePaths: string[]): Promise<Jimp[]> {
 	}
 }
 
-function stitchRow(rowImages: Jimp[], maxWidth: number, maxHeight: number) {
+function stitchRow(
+	rowImages: Jimp[],
+	maxWidth: number,
+	maxHeight: number,
+): WorkerResult {
 	const resultRow = new Jimp(
 		rowImages.length * maxWidth,
 		maxHeight,

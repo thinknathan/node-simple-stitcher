@@ -8,3 +8,9 @@ declare type WorkerData = {
 	maxWidth: number;
 	maxHeight: number;
 };
+
+declare type WorkerResult = {
+	buffer: ArrayBufferLike;
+	width: number;
+	height: number;
+};

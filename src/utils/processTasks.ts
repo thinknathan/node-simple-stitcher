@@ -83,11 +83,7 @@ export async function stitchImages(
 		workerPool.addTask({ rowImages: rowSubset, maxWidth, maxHeight });
 	}
 
-	const rowImagesFinal: {
-		buffer: Buffer;
-		width: number;
-		height: number;
-	}[] = await workerPool.waitForCompletion();
+	const rowImagesFinal: WorkerResult[] = await workerPool.waitForCompletion();
 
 	const resultWidth = columns * maxWidth;
 	const resultHeight = rows * maxHeight;

@@ -75,7 +75,7 @@ export class WorkerPool {
 			this.workers.map(
 				(worker) =>
 					new Promise((resolve) => {
-						worker.on('message', (message) => {
+						worker.on('message', (message: WorkerResult) => {
 							resolve(message);
 							this.processNextTask();
 						});

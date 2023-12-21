@@ -72,7 +72,11 @@ export async function stitchImages(
 		workerPool.addTask({ rowImages: rowSubset, maxWidth, maxHeight });
 	}
 
-	const rowImagesFinal: Jimp['bitmap'][] = await workerPool.waitForCompletion();
+	const rowImagesFinal: {
+		buffer: Buffer;
+		width: number;
+		height: number;
+	}[] = await workerPool.waitForCompletion();
 
 	const resultWidth = columns * maxWidth;
 	const resultHeight = rows * maxHeight;
@@ -82,12 +86,11 @@ export async function stitchImages(
 	for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
 		const x = 0;
 		const y = rowIndex * maxHeight;
-		const rowImage = new Jimp(
-			rowImagesFinal[rowIndex].width,
-			rowImagesFinal[rowIndex].height,
-		);
-		rowImage.bitmap = rowImagesFinal[rowIndex];
-		// console.log(rowImage.bitmap);
+		const rowImage = new Jimp({
+			width: rowImagesFinal[rowIndex].width,
+			height: rowImagesFinal[rowIndex].height,
+			data: Buffer.from(new Uint8Array(rowImagesFinal[rowIndex].buffer)),
+		});
 		resultImage.composite(rowImage, x, y);
 	}
 

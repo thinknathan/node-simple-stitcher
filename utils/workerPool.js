@@ -66,7 +66,7 @@ class WorkerPool {
     waitForCompletion() {
         return Promise.all(this.workers.map((worker) => new Promise((resolve) => {
             worker.on('message', (message) => {
-                resolve(message.result);
+                resolve(message);
                 this.processNextTask();
             });
         })));

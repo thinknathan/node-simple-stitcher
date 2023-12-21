@@ -4,17 +4,16 @@ const Jimp = require("jimp");
 const worker_threads_1 = require("worker_threads");
 async function readImages(imagePaths) {
     try {
-        const images = [];
-        for (const imagePath of imagePaths) {
+        const imagePromises = imagePaths.map(async (imagePath) => {
             try {
-                const image = await Jimp.read(imagePath);
-                images.push(image);
+                return await Jimp.read(imagePath);
             }
             catch (error) {
                 console.error(`Skipping file ${imagePath}`, { error });
+                return null;
             }
-        }
-        return images;
+        });
+        return Promise.all(imagePromises).then((images) => images.filter(Boolean));
     }
     catch (error) {
         console.error('Error reading images from folder', { error });
@@ -28,17 +27,21 @@ function stitchRow(rowImages, maxWidth, maxHeight) {
         const y = Math.floor((maxHeight - image.getHeight()) / 2);
         resultRow.composite(image, x, y);
     });
-    console.log(resultRow.bitmap);
-    return resultRow.bitmap;
+    return {
+        buffer: resultRow.bitmap.data.buffer,
+        width: resultRow.bitmap.width,
+        height: resultRow.bitmap.height,
+    };
 }
 // Listen for messages from the main thread
 if (worker_threads_1.parentPort) {
     worker_threads_1.parentPort.on('message', async (message) => {
         if (worker_threads_1.parentPort && message.message === 'init') {
             const { rowImages, maxWidth, maxHeight } = message.workerData;
-            const result = stitchRow(await readImages(rowImages), maxWidth, maxHeight);
+            const images = await readImages(rowImages);
+            const result = stitchRow(images, maxWidth, maxHeight);
             // Send the result back to the main thread
-            worker_threads_1.parentPort.postMessage({ result }, [result.data.buffer]);
+            worker_threads_1.parentPort.postMessage(result, [result.buffer]);
             // Close the worker thread
             worker_threads_1.parentPort.close();
         }

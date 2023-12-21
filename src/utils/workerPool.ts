@@ -76,7 +76,7 @@ export class WorkerPool {
 				(worker) =>
 					new Promise((resolve) => {
 						worker.on('message', (message) => {
-							resolve(message.result);
+							resolve(message);
 							this.processNextTask();
 						});
 					}),

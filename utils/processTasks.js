@@ -64,9 +64,11 @@ async function stitchImages(inputFolder, maxColumns, threadCount) {
     for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
         const x = 0;
         const y = rowIndex * maxHeight;
-        const rowImage = new Jimp(rowImagesFinal[rowIndex].width, rowImagesFinal[rowIndex].height);
-        rowImage.bitmap = rowImagesFinal[rowIndex];
-        // console.log(rowImage.bitmap);
+        const rowImage = new Jimp({
+            width: rowImagesFinal[rowIndex].width,
+            height: rowImagesFinal[rowIndex].height,
+            data: Buffer.from(new Uint8Array(rowImagesFinal[rowIndex].buffer)),
+        });
         resultImage.composite(rowImage, x, y);
     }
     return resultImage;

@@ -51,11 +51,12 @@ async function readImages(folder: string): Promise<Jimp[]> {
 
 // Function to stitch images together
 function stitchImages(images: Jimp[], maxColumns: number): Jimp {
+	// Find the maximum width and height among all images
+	const maxWidth = Math.max(...images.map((img) => img.getWidth()));
+	const maxHeight = Math.max(...images.map((img) => img.getHeight()));
+
 	const columns = Math.min(maxColumns, images.length);
 	const rows = Math.ceil(images.length / maxColumns);
-
-	const maxWidth = images[0].getWidth();
-	const maxHeight = images[0].getHeight();
 
 	const resultWidth = columns * maxWidth;
 	const resultHeight = rows * maxHeight;
@@ -81,6 +82,11 @@ async function main() {
 
 	// Read images from the input folder
 	const images = await readImages(inputFolder);
+
+	if (images.length === 0) {
+		console.log('No valid images found. Exiting.');
+		return;
+	}
 
 	// Stitch images together
 	const stitchedImage = stitchImages(images, maxColumns);

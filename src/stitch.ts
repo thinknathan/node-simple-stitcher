@@ -10,21 +10,6 @@ type Options = {
 	maxColumns: number;
 };
 
-// Define the command line arguments
-const argv = yargs
-	.option('folder', {
-		alias: 'f',
-		describe: 'Input folder containing square images',
-		demandOption: true,
-		type: 'string',
-	})
-	.option('maxColumns', {
-		alias: 'c',
-		describe: 'Maximum number of columns in the output image',
-		demandOption: true,
-		type: 'number',
-	}).argv as unknown as Options;
-
 // Function to read images from the specified folder
 async function readImages(folder: string): Promise<Jimp[]> {
 	try {
@@ -81,6 +66,22 @@ function stitchImages(images: Jimp[], maxColumns: number): Jimp {
 
 // Main function
 async function main() {
+	// Define the command line arguments
+	const argv = yargs
+		.option('folder', {
+			alias: 'f',
+			describe: 'Input folder containing square images',
+			demandOption: true,
+			type: 'string',
+		})
+		.option('maxColumns', {
+			alias: 'c',
+			describe: 'Maximum number of columns in the output image',
+			demandOption: true,
+			type: 'number',
+		}).argv as unknown as Options;
+
+	console.time('stitch');
 	const inputFolder = argv.folder as string;
 	const maxColumns = argv.maxColumns as number;
 
@@ -112,6 +113,7 @@ async function main() {
 	await stitchedImage.writeAsync(outputImagePath);
 
 	console.log(`Combined image saved to: ${outputImagePath}`);
+	console.timeEnd('stitch');
 }
 
 // Run the main function

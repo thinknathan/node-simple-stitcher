@@ -3,8 +3,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yargs from 'yargs';
+import * as os from 'os';
 
-import { stitchImages } from './utils/processImages';
+import { stitchImages } from './utils/processTasks';
 
 // Main function
 async function main() {
@@ -33,8 +34,18 @@ async function main() {
 	const inputFolder = argv.folder as string;
 	const maxColumns = argv.maxColumns as number;
 
+	// Split the task into threads
+	let numCores = 1;
+	try {
+		numCores = os.cpus().length;
+	} catch (err) {
+		console.error(err);
+	}
+	numCores = Math.max(numCores - 1, 1); // Min 1
+	numCores = Math.min(numCores, 16); // Max 16
+
 	// Stitch images together
-	const stitchedImage = await stitchImages(inputFolder, maxColumns);
+	const stitchedImage = await stitchImages(inputFolder, maxColumns, numCores);
 
 	// Create the output folder if it doesn't exist
 	const outputFolder = 'output';

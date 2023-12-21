@@ -2,6 +2,8 @@
 
 Command-line utility that stitches together images in a folder to form a single spritesheet. It uses a naive algorithm that is not the most efficient when handling images that have different dimensions.
 
+Now uses a web worker pool to split up the rows. This implementation is slower.
+
 ## Install
 
 1. Install [Nodejs](https://nodejs.org/en) or equivalent

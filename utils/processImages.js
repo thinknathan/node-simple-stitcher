@@ -1,22 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stitchImages = void 0;
-const fs = require("fs");
-const path = require("path");
 const Jimp = require("jimp");
-// Function to read images from the specified folder
-async function readImages(folder) {
+const worker_threads_1 = require("worker_threads");
+async function readImages(imagePaths) {
     try {
-        const files = fs.readdirSync(folder);
         const images = [];
-        for (const file of files) {
-            const imagePath = path.join(folder, file);
+        for (const imagePath of imagePaths) {
             try {
                 const image = await Jimp.read(imagePath);
                 images.push(image);
             }
             catch (error) {
-                console.error(`Skipping file ${file}`, { error });
+                console.error(`Skipping file ${imagePath}`, { error });
             }
         }
         return images;
@@ -26,30 +21,26 @@ async function readImages(folder) {
         return [];
     }
 }
-// Function to stitch images together
-async function stitchImages(inputFolder, maxColumns) {
-    // Read images from the input folder
-    const images = await readImages(inputFolder);
-    if (images.length === 0) {
-        throw new Error('No valid images found.');
-    }
-    // Find the maximum width and height among all images
-    const maxWidth = Math.max(...images.map((img) => img.getWidth()));
-    const maxHeight = Math.max(...images.map((img) => img.getHeight()));
-    const columns = Math.min(maxColumns, images.length);
-    const rows = Math.ceil(images.length / maxColumns);
-    const resultWidth = columns * maxWidth;
-    const resultHeight = rows * maxHeight;
-    // Create a new image with a transparent background
-    const resultImage = new Jimp(resultWidth, resultHeight, 0x00000000);
-    images.forEach((image, index) => {
-        const x = (index % columns) * maxWidth +
-            Math.floor((maxWidth - image.getWidth()) / 2);
-        const y = Math.floor(index / columns) * maxHeight +
-            Math.floor((maxHeight - image.getHeight()) / 2);
-        // Compose the images onto the result image with alpha transparency
-        resultImage.composite(image, x, y);
+function stitchRow(rowImages, maxWidth, maxHeight) {
+    const resultRow = new Jimp(rowImages.length * maxWidth, maxHeight, 0x00000000);
+    rowImages.forEach((image, columnIndex) => {
+        const x = columnIndex * maxWidth + Math.floor((maxWidth - image.getWidth()) / 2);
+        const y = Math.floor((maxHeight - image.getHeight()) / 2);
+        resultRow.composite(image, x, y);
     });
-    return resultImage;
+    console.log(resultRow.bitmap);
+    return resultRow.bitmap;
 }
-exports.stitchImages = stitchImages;
+// Listen for messages from the main thread
+if (worker_threads_1.parentPort) {
+    worker_threads_1.parentPort.on('message', async (message) => {
+        if (worker_threads_1.parentPort && message.message === 'init') {
+            const { rowImages, maxWidth, maxHeight } = message.workerData;
+            const result = stitchRow(await readImages(rowImages), maxWidth, maxHeight);
+            // Send the result back to the main thread
+            worker_threads_1.parentPort.postMessage({ result }, [result.data.buffer]);
+            // Close the worker thread
+            worker_threads_1.parentPort.close();
+        }
+    });
+}

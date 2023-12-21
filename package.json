@@ -1,6 +1,6 @@
 {
 	"name": "node-simple-stitcher",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Stitches together images in a folder to form a single spritesheet",
 	"repository": {
 		"type": "git",

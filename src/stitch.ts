@@ -81,7 +81,7 @@ async function main() {
 			type: 'number',
 		}).argv as unknown as Options;
 
-	console.time('stitch');
+	console.time('Done in');
 	const inputFolder = argv.folder as string;
 	const maxColumns = argv.maxColumns as number;
 
@@ -113,7 +113,7 @@ async function main() {
 	await stitchedImage.writeAsync(outputImagePath);
 
 	console.log(`Combined image saved to: ${outputImagePath}`);
-	console.timeEnd('stitch');
+	console.timeEnd('Done in');
 }
 
 // Run the main function

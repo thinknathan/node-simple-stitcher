@@ -64,7 +64,7 @@ async function main() {
 			demandOption: true,
 			type: 'number',
 		}).argv;
-	console.time('stitch');
+	console.time('Done in');
 	const inputFolder = argv.folder;
 	const maxColumns = argv.maxColumns;
 	// Read images from the input folder
@@ -89,7 +89,7 @@ async function main() {
 	const outputImagePath = path.join(outputFolder, outputFileName);
 	await stitchedImage.writeAsync(outputImagePath);
 	console.log(`Combined image saved to: ${outputImagePath}`);
-	console.timeEnd('stitch');
+	console.timeEnd('Done in');
 }
 // Run the main function
 main();

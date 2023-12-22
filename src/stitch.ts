@@ -6,8 +6,9 @@ import * as yargs from 'yargs';
 
 import { stitchImages } from './utils/processImages';
 
-// Main function
 async function main() {
+	console.time('Done in');
+
 	// Define the command line arguments
 	const argv = yargs
 		.option('folder', {
@@ -29,7 +30,6 @@ async function main() {
 			type: 'number',
 		}).argv as unknown as Options;
 
-	console.time('Done in');
 	const inputFolder = argv.folder as string;
 	const maxColumns = argv.maxColumns as number;
 

@@ -5,8 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const yargs = require('yargs');
 const processImages_1 = require('./utils/processImages');
-// Main function
 async function main() {
+	console.time('Done in');
 	// Define the command line arguments
 	const argv = yargs
 		.option('folder', {
@@ -27,7 +27,6 @@ async function main() {
 			demandOption: true,
 			type: 'number',
 		}).argv;
-	console.time('Done in');
 	const inputFolder = argv.folder;
 	const maxColumns = argv.maxColumns;
 	// Stitch images together

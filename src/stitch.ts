@@ -12,7 +12,7 @@ async function main() {
 	const argv = yargs
 		.option('folder', {
 			alias: 'f',
-			describe: 'Input folder containing square images',
+			describe: 'Input folder containing images to stitch',
 			demandOption: true,
 			type: 'string',
 			coerce: (value) => {

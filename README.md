@@ -19,7 +19,7 @@ Command-line utility that stitches together images in a folder to form a single 
 `node stitch.cjs`
 
 ```
--f, --folder      Input folder containing square images    [string] [required]
+-f, --folder      Input folder containing images to stitch    [string] [required]
 -c, --maxColumns  Maximum number of columns in the output image
                                                              [number] [required]
 ```

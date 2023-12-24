@@ -24,6 +24,9 @@ Command-line utility that stitches together images in a folder to form a single 
                                                              [number] [required]
 ```
 
+- Valid input formats: `jpeg`, `png`, `bmp`, `tiff`, `gif`
+- Output format is `png`
+
 ## Background
 
 Created with Chat-GPT 3.5.

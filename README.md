@@ -1,4 +1,4 @@
-# node-simple-stitcher
+# Simple Image Stitcher
 
 Command-line utility that stitches together images in a folder to form a single spritesheet. It uses a naive algorithm that is not the most efficient when handling images that have different dimensions.
 
@@ -14,9 +14,12 @@ Command-line utility that stitches together images in a folder to form a single 
    or
    `yarn`
 
+4. Install for command-line usage
+   `npm link`
+
 ## Usage
 
-`node stitch.cjs`
+`stitch`
 
 ```
 -f, --folder      Input folder containing images to stitch    [string] [required]

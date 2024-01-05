@@ -1,3 +1,5 @@
+<img src="_docs/simple-image-stitcher.png" alt="Simple Image Stitcher">
+
 # Simple Image Stitcher
 
 Command-line utility that stitches together images in a folder to form a single spritesheet. It uses a naive algorithm that is not the most efficient when handling images that have different dimensions.

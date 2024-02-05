@@ -9,6 +9,9 @@
 	"author": "Nathan Bolton (https://thinknathan.ca/)",
 	"license": "CC0-1.0",
 	"type": "commonjs",
+	"engines": {
+		"node": "^18 || >=20"
+	},
 	"main": "stitch.cjs",
 	"bin": {
 		"stitch": "./stitch.cjs"

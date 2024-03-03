@@ -2,7 +2,7 @@
 
 # Simple Image Stitcher
 
-[![CI](https://github.com/thinknathan/node-simple-stitcher/actions/workflows/ci.yml/badge.svg)](https://github.com/thinknathan/node-simple-stitcher/actions/workflows/ci.yml)
+[![CI](https://github.com/thinknathan/node-simple-stitcher/actions/workflows/ci.yml/badge.svg)](https://github.com/thinknathan/node-simple-stitcher/actions/workflows/ci.yml) ![GitHub License](https://img.shields.io/github/license/thinknathan/node-simple-stitcher)
 
 Command-line utility that stitches together images in a folder to form a single spritesheet. It uses a naive algorithm that is not the most efficient when handling images that have different dimensions.
 

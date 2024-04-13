@@ -16,7 +16,7 @@ async function main() {
 			describe: 'Input folder containing images to stitch',
 			demandOption: true,
 			type: 'string',
-			coerce: (value) => {
+			coerce: (value: string | string[]) => {
 				if (Array.isArray(value)) {
 					value = value.join('');
 				}
@@ -30,8 +30,8 @@ async function main() {
 			type: 'number',
 		}).argv as unknown as Options;
 
-	const inputFolder = argv.folder as string;
-	const maxColumns = argv.maxColumns as number;
+	const inputFolder = argv.folder;
+	const maxColumns = argv.maxColumns;
 
 	// Stitch images together
 	const stitchedImage = await stitchImages(inputFolder, maxColumns);
@@ -57,4 +57,4 @@ async function main() {
 }
 
 // Run the main function
-main();
+void main();

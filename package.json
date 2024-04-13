@@ -30,7 +30,6 @@
 	"devDependencies": {
 		"@types/yargs": "^17.0.32",
 		"eslint": "^8.56.0",
-		"globals": "*",
 		"prettier": "^3.1.1",
 		"typescript": "~5.4.2",
 		"typescript-eslint": "^7.6.0"

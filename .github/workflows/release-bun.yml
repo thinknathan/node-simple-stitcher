@@ -29,7 +29,7 @@ jobs:
       - name: Build Darwin x64
         run: bun build --compile --minify --target=bun-darwin-x64 ./stitch.cjs --outfile stitch-darwin-x64
       - name: Upload release files
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           path: ./stitch*
           compression-level: 7
